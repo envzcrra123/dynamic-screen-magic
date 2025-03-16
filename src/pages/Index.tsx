@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import StatusBar from '@/components/StatusBar';
 import Header from '@/components/Header';
 import BottomNavigation from '@/components/BottomNavigation';
-import MedicalBot from '@/components/MedicalBot';
 import SymptomInput from '@/components/SymptomInput';
-import { toast } from '@/components/ui/use-toast';
+import ChatMessage from '@/components/ChatMessage';
+import { toast } from '@/hooks/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Diagnosis {
   disease: string;
@@ -13,11 +14,45 @@ interface Diagnosis {
   description: string;
 }
 
+interface ChatMessageType {
+  id: string;
+  message: string;
+  isBot: boolean;
+}
+
 const Index: React.FC = () => {
-  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
+    {
+      id: '1',
+      message: 'Hello! I\'m your medical assistant. Please describe your symptoms, and I\'ll try to provide some possible diagnoses.',
+      isBot: true
+    }
+  ]);
   const [loading, setLoading] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom on new messages
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollableElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollableElement) {
+        scrollableElement.scrollTop = scrollableElement.scrollHeight;
+      }
+    }
+  }, [chatMessages]);
 
   const handleSymptomSubmit = (input: string) => {
+    // Add user message
+    const userMessageId = Date.now().toString();
+    setChatMessages(prevMessages => [
+      ...prevMessages,
+      {
+        id: userMessageId,
+        message: input,
+        isBot: false
+      }
+    ]);
+    
     setLoading(true);
     
     // Simulate API call for diagnosis
@@ -41,7 +76,25 @@ const Index: React.FC = () => {
         }
       ];
       
-      setDiagnoses(mockDiagnoses);
+      // Create bot response with diagnoses
+      let botResponse = "Based on your symptoms, here are some possible diagnoses:\n\n";
+      
+      mockDiagnoses.forEach((diagnosis, index) => {
+        botResponse += `${index + 1}. **${diagnosis.disease}** (${Math.floor(diagnosis.probability * 100)}% match)\n${diagnosis.description}\n\n`;
+      });
+      
+      botResponse += "Please note that these results are for informational purposes only and do not constitute medical advice. Consult with a healthcare professional for proper diagnosis and treatment.";
+      
+      // Add bot message
+      setChatMessages(prevMessages => [
+        ...prevMessages,
+        {
+          id: (Date.now() + 1).toString(),
+          message: botResponse,
+          isBot: true
+        }
+      ]);
+      
       setLoading(false);
       
       toast({
@@ -56,42 +109,32 @@ const Index: React.FC = () => {
       <StatusBar />
       <Header title="Symptoms Checker" />
       
-      <main className="flex-1 overflow-y-auto p-5 custom-scrollbar">
-        <div className="flex flex-col items-center space-y-6 animate-fade-in">
-          <MedicalBot className="mt-6" />
-          
-          <SymptomInput onSubmit={handleSymptomSubmit} />
-          
-          {loading && (
-            <div className="w-full pt-8 flex justify-center">
-              <div className="w-10 h-10 border-t-2 border-medical-purple rounded-full animate-spin"></div>
-            </div>
-          )}
-          
-          {diagnoses.length > 0 && (
-            <div className="w-full space-y-4 mt-6 animate-slide-up">
-              <h2 className="text-lg font-semibold">Possible Diagnoses:</h2>
-              
-              {diagnoses.map((diagnosis, index) => (
-                <div 
-                  key={index} 
-                  className="bg-white border border-medical-gray rounded-lg p-4 shadow-sm"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold text-gray-900">{diagnosis.disease}</h3>
-                    <span className="px-2 py-1 bg-medical-purple text-white text-xs rounded-full">
-                      {Math.floor(diagnosis.probability * 100)}%
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">{diagnosis.description}</p>
+      <main className="flex-1 flex flex-col p-4 overflow-hidden">
+        <ScrollArea className="flex-1 pr-2" ref={scrollAreaRef}>
+          <div className="flex flex-col space-y-4 pb-4">
+            {chatMessages.map((msg) => (
+              <ChatMessage 
+                key={msg.id}
+                message={msg.message}
+                isBot={msg.isBot}
+              />
+            ))}
+            
+            {loading && (
+              <div className="self-start flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
-              ))}
-              
-              <div className="text-xs text-gray-500 italic text-center mt-4">
-                Note: These results are for informational purposes only and do not constitute medical advice.
+                <span>Analyzing symptoms...</span>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        </ScrollArea>
+        
+        <div className="mt-4">
+          <SymptomInput onSubmit={handleSymptomSubmit} loading={loading} />
         </div>
       </main>
       

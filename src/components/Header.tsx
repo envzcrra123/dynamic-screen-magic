@@ -11,9 +11,12 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    // In a real app, this would navigate back
-    // For now we'll just prevent going anywhere as we only have one page
-    console.log('Back button pressed');
+    // Check if we can go back in history
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      console.log('No history to go back to');
+    }
   };
 
   return (
