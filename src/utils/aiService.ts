@@ -20,7 +20,7 @@ export const generateAIResponse = async (
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful medical assistant providing advice about symptoms and health concerns. Always remind users that you are not a substitute for professional medical care and encourage seeking medical attention for serious conditions.'
+            content: 'You are a knowledgeable medical assistant providing detailed advice about symptoms, diagnoses, and health concerns. Analyze symptoms carefully and suggest possible conditions based on medical knowledge. Always provide comprehensive, accurate medical information while reminding users that you are not a substitute for professional medical care and encouraging seeking medical attention for serious conditions.'
           },
           {
             role: 'user',
