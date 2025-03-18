@@ -1,12 +1,13 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import StatusBar from '@/components/StatusBar';
 import Header from '@/components/Header';
 import BottomNavigation from '@/components/BottomNavigation';
 import SymptomInput from '@/components/SymptomInput';
 import ChatMessage from '@/components/ChatMessage';
+import ApiKeyInput from '@/components/ApiKeyInput';
 import { toast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { generateAIResponse } from '@/utils/aiService';
 
 interface Diagnosis {
   disease: string;
@@ -66,9 +67,11 @@ const Index: React.FC = () => {
     }
   ]);
   const [loading, setLoading] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [isAIMode, setIsAIMode] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom on new messages
+  // Effect for scrolling to bottom on new messages
   useEffect(() => {
     if (scrollAreaRef.current) {
       const scrollableElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
@@ -77,6 +80,11 @@ const Index: React.FC = () => {
       }
     }
   }, [chatMessages]);
+
+  // Effect to set AI mode when API key is available
+  useEffect(() => {
+    setIsAIMode(apiKey.trim() !== '');
+  }, [apiKey]);
 
   // Function to detect symptoms in user input
   const detectSymptoms = (input: string): string[] => {
@@ -178,7 +186,7 @@ const Index: React.FC = () => {
     });
   };
 
-  const handleSymptomSubmit = (input: string) => {
+  const handleSymptomSubmit = async (input: string) => {
     // Add user message
     const userMessageId = Date.now().toString();
     setChatMessages(prevMessages => [
@@ -192,63 +200,126 @@ const Index: React.FC = () => {
     
     setLoading(true);
     
-    // Detect symptoms from user input
-    const detectedSymptoms = detectSymptoms(input);
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      let botResponse = "";
-      
-      if (detectedSymptoms.length === 0) {
-        botResponse = "I couldn't identify specific symptoms from your description. Please provide more details about how you're feeling. For example, do you have fever, headache, cough, or other symptoms?";
-      } else {
-        // Add specific advice for each detected symptom
-        botResponse = "Based on your description, I've identified these symptoms:\n\n";
-        detectedSymptoms.forEach(symptom => {
-          if (symptomDatabase[symptom as keyof typeof symptomDatabase]) {
-            botResponse += `**${symptom.replace('_', ' ')}**: ${symptomDatabase[symptom as keyof typeof symptomDatabase].advice}\n\n`;
-          }
-        });
+    try {
+      if (isAIMode) {
+        // Use AI-powered response
+        const aiPrompt = `Medical question: ${input}\n\nPlease provide medical advice, possible conditions, and recommendations. Include relevant medical information while reminding that this is not a substitute for professional medical care.`;
         
-        // Generate potential diagnoses
-        const diagnoses = generateDiagnoses(detectedSymptoms);
+        const aiResponse = await generateAIResponse(aiPrompt, apiKey);
         
-        if (diagnoses.length > 0) {
-          botResponse += "## Possible conditions based on your symptoms:\n\n";
-          
-          diagnoses.forEach((diagnosis, index) => {
-            botResponse += `${index + 1}. **${diagnosis.disease}** (${Math.floor(diagnosis.probability * 100)}% match)\n${diagnosis.description}\n\n`;
+        if (aiResponse.isError) {
+          toast({
+            title: "AI Error",
+            description: "Could not get an AI response. Falling back to basic analysis.",
+            variant: "destructive"
           });
           
-          botResponse += "**Important reminder**: This is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.";
+          // Fall back to basic symptom detection if AI fails
+          processBasicSymptomDetection(input);
+        } else {
+          // Add AI response
+          setChatMessages(prevMessages => [
+            ...prevMessages,
+            {
+              id: (Date.now() + 1).toString(),
+              message: aiResponse.message,
+              isBot: true
+            }
+          ]);
+          
+          toast({
+            title: "AI Analysis Complete",
+            description: "AI has analyzed your query and provided a response.",
+          });
         }
+      } else {
+        // Use basic symptom detection
+        processBasicSymptomDetection(input);
       }
+    } catch (error) {
+      console.error("Error in symptom processing:", error);
       
-      // Add bot message
+      // Add error message
       setChatMessages(prevMessages => [
         ...prevMessages,
         {
           id: (Date.now() + 1).toString(),
-          message: botResponse,
+          message: "Sorry, there was an error processing your request. Please try again.",
           isBot: true
         }
       ]);
       
-      setLoading(false);
-      
       toast({
-        title: "Symptom Analysis Complete",
-        description: "We've analyzed your symptoms and provided possible information.",
+        title: "Error",
+        description: "There was a problem analyzing your symptoms.",
+        variant: "destructive"
       });
-    }, 1500);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const processBasicSymptomDetection = (input: string) => {
+    // Detect symptoms from user input
+    const detectedSymptoms = detectSymptoms(input);
+    
+    let botResponse = "";
+    
+    if (detectedSymptoms.length === 0) {
+      botResponse = "I couldn't identify specific symptoms from your description. Please provide more details about how you're feeling. For example, do you have fever, headache, cough, or other symptoms?";
+    } else {
+      // Add specific advice for each detected symptom
+      botResponse = "Based on your description, I've identified these symptoms:\n\n";
+      detectedSymptoms.forEach(symptom => {
+        if (symptomDatabase[symptom as keyof typeof symptomDatabase]) {
+          botResponse += `**${symptom.replace('_', ' ')}**: ${symptomDatabase[symptom as keyof typeof symptomDatabase].advice}\n\n`;
+        }
+      });
+      
+      // Generate potential diagnoses
+      const diagnoses = generateDiagnoses(detectedSymptoms);
+      
+      if (diagnoses.length > 0) {
+        botResponse += "## Possible conditions based on your symptoms:\n\n";
+        
+        diagnoses.forEach((diagnosis, index) => {
+          botResponse += `${index + 1}. **${diagnosis.disease}** (${Math.floor(diagnosis.probability * 100)}% match)\n${diagnosis.description}\n\n`;
+        });
+        
+        botResponse += "**Important reminder**: This is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.";
+      }
+    }
+    
+    // Add bot message
+    setChatMessages(prevMessages => [
+      ...prevMessages,
+      {
+        id: (Date.now() + 1).toString(),
+        message: botResponse,
+        isBot: true
+      }
+    ]);
+    
+    toast({
+      title: "Symptom Analysis Complete",
+      description: "We've analyzed your symptoms and provided possible information.",
+    });
   };
 
   return (
     <div className="mobile-container">
       <StatusBar />
-      <Header title="Symptoms Checker" />
+      <Header title="Symptoms Checker">
+        <ApiKeyInput onApiKeyChange={setApiKey} />
+      </Header>
       
       <main className="flex-1 flex flex-col p-4 overflow-hidden">
+        <div className="mb-3">
+          <div className={`rounded-lg text-xs py-1 px-2 inline-block ${isAIMode ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+            {isAIMode ? 'Advanced AI Mode' : 'Basic Analysis Mode'}
+          </div>
+        </div>
+        
         <ScrollArea className="flex-1 pr-2" ref={scrollAreaRef}>
           <div className="flex flex-col space-y-4 pb-4">
             {chatMessages.map((msg) => (
@@ -266,7 +337,7 @@ const Index: React.FC = () => {
                   <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                   <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
-                <span>Analyzing symptoms...</span>
+                <span>{isAIMode ? "AI is thinking..." : "Analyzing symptoms..."}</span>
               </div>
             )}
           </div>
