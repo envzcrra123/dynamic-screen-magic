@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback } from './ui/avatar';
 import { cn } from '@/lib/utils';
 
 interface ChatMessageProps {
@@ -12,13 +12,16 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, className }) => {
   return (
     <div className={cn(
-      "flex items-start gap-2 max-w-[80%]",
+      "flex items-start gap-2 max-w-[85%]",
       isBot ? "self-start" : "self-end ml-auto flex-row-reverse",
       className
     )}>
-      <Avatar className="h-8 w-8 flex-shrink-0">
+      <Avatar className={cn(
+        "h-8 w-8 flex-shrink-0",
+        isBot ? "bg-indigo-100" : "bg-gray-200"
+      )}>
         {isBot ? (
-          <AvatarFallback className="bg-gray-300 text-gray-600">
+          <AvatarFallback className="bg-indigo-100 text-indigo-600">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -46,7 +49,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, className }) 
             </svg>
           </AvatarFallback>
         ) : (
-          <AvatarFallback className="bg-medical-purple text-white">
+          <AvatarFallback className="bg-gray-200 text-gray-600">
             <svg
               viewBox="0 0 24 24"
               fill="none" 
@@ -70,8 +73,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isBot, className }) 
       <div className={cn(
         "py-2 px-3 rounded-lg text-sm",
         isBot 
-          ? "bg-gray-100 text-gray-800" 
-          : "bg-medical-purple text-white"
+          ? "bg-cyan-500 text-white" 
+          : "bg-gray-200 text-gray-800"
       )}>
         {message}
       </div>

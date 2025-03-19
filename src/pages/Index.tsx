@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import BottomNavigation from '@/components/BottomNavigation';
 import SymptomInput from '@/components/SymptomInput';
 import ChatMessage from '@/components/ChatMessage';
-import ApiKeyInput from '@/components/ApiKeyInput';
+import MedicalBot from '@/components/MedicalBot';
 import { toast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { generateAIResponse } from '@/utils/aiService';
@@ -120,42 +120,49 @@ const Index: React.FC = () => {
   return (
     <div className="mobile-container">
       <StatusBar />
-      <Header title="Medical Assistant">
-        <ApiKeyInput />
-      </Header>
+      <Header title="Symptoms Checker" />
       
       <main className="flex-1 flex flex-col p-4 overflow-hidden">
-        <div className="mb-3">
-          <div className={`rounded-lg text-xs py-1 px-2 inline-block ${!modelLoading ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-            {!modelLoading ? 'AI Model Loaded - Ready to Help' : 'AI Model Loading...'}
+        {chatMessages.length <= 1 && !loading && (
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <MedicalBot className="mb-4" />
+            <div className="bg-gray-200 rounded-lg p-4 max-w-sm text-center text-gray-600 text-sm">
+              Enter a brief patient's description and user will provide a list of possible disease diagnoses.
+            </div>
           </div>
-        </div>
+        )}
         
-        <ScrollArea className="flex-1 pr-2" ref={scrollAreaRef}>
-          <div className="flex flex-col space-y-4 pb-4">
-            {chatMessages.map((msg) => (
-              <ChatMessage 
-                key={msg.id}
-                message={msg.message}
-                isBot={msg.isBot}
-              />
-            ))}
-            
-            {loading && (
-              <div className="self-start flex items-center gap-2 text-sm text-gray-500">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        {(chatMessages.length > 1 || loading) && (
+          <ScrollArea className="flex-1 pr-2" ref={scrollAreaRef}>
+            <div className="flex flex-col space-y-4 pb-4">
+              {chatMessages.map((msg) => (
+                <ChatMessage 
+                  key={msg.id}
+                  message={msg.message}
+                  isBot={msg.isBot}
+                />
+              ))}
+              
+              {loading && (
+                <div className="self-start flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-2 h-2 bg-medical-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                  <span>Analyzing your question...</span>
                 </div>
-                <span>Analyzing your question...</span>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+              )}
+            </div>
+          </ScrollArea>
+        )}
         
         <div className="mt-4">
-          <SymptomInput onSubmit={handleSymptomSubmit} loading={loading || modelLoading} />
+          <SymptomInput 
+            onSubmit={handleSymptomSubmit} 
+            loading={loading || modelLoading} 
+            placeholder="Enter a brief patient's description..."
+          />
         </div>
       </main>
       
