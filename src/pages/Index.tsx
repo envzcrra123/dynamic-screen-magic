@@ -20,34 +20,12 @@ const Index: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
     {
       id: '1',
-      message: 'Hello! I\'m your medical assistant powered by an AI model running in your browser. Please describe your symptoms or ask any health-related questions, and I\'ll try to help. Remember, this is not a substitute for professional medical care.',
+      message: 'Hello! I\'m your medical assistant. Please describe your symptoms or ask any health-related questions, and I\'ll try to help. Remember, this is not a substitute for professional medical care.',
       isBot: true
     }
   ]);
   const [loading, setLoading] = useState(false);
-  const [modelLoading, setModelLoading] = useState(true);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  // Effect for loading the AI model on component mount
-  useEffect(() => {
-    const loadModel = async () => {
-      try {
-        setModelLoading(true);
-        // We'll just try to generate a simple response to trigger model loading
-        await generateAIResponse("Initialize");
-        setModelLoading(false);
-      } catch (error) {
-        console.error("Error loading AI model:", error);
-        toast({
-          title: "Model Loading Error",
-          description: "There was a problem loading the AI model. Please refresh and try again.",
-          variant: "destructive"
-        });
-      }
-    };
-    
-    loadModel();
-  }, []);
 
   // Effect for scrolling to bottom on new messages
   useEffect(() => {
@@ -74,7 +52,7 @@ const Index: React.FC = () => {
     setLoading(true);
     
     try {
-      // Generate response using the client-side AI model
+      // Generate response using our simplified AI service
       const aiResponse = await generateAIResponse(input);
       
       if (aiResponse.isError) {
@@ -160,7 +138,7 @@ const Index: React.FC = () => {
         <div className="mt-4">
           <SymptomInput 
             onSubmit={handleSymptomSubmit} 
-            loading={loading || modelLoading} 
+            loading={loading}
             placeholder="Enter a brief patient's description..."
           />
         </div>
