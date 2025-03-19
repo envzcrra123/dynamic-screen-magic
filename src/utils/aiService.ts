@@ -9,26 +9,22 @@ export const generateAIResponse = async (
   apiKey: string
 ): Promise<AIResponse> => {
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://dialogflow.googleapis.com/v2/projects/medical-assistant/agent/sessions/123456:detectIntent', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a knowledgeable medical assistant providing detailed advice about symptoms, diagnoses, and health concerns. Analyze symptoms carefully and suggest possible conditions based on medical knowledge. Always provide comprehensive, accurate medical information while reminding users that you are not a substitute for professional medical care and encouraging seeking medical attention for serious conditions.'
-          },
-          {
-            role: 'user',
-            content: prompt
+        queryInput: {
+          text: {
+            text: prompt,
+            languageCode: 'en-US'
           }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
+        },
+        queryParams: {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        }
       })
     });
 
@@ -42,13 +38,13 @@ export const generateAIResponse = async (
 
     const data = await response.json();
     return {
-      message: data.choices[0].message.content,
+      message: data.queryResult?.fulfillmentText || 'Sorry, I couldn\'t understand that. Could you rephrase your question?',
       isError: false
     };
   } catch (error) {
     console.error('AI service error:', error);
     return {
-      message: 'Sorry, there was an error connecting to the AI service. Please try again later.',
+      message: 'Sorry, there was an error connecting to the AI service. Please check your API key and try again later.',
       isError: true
     };
   }

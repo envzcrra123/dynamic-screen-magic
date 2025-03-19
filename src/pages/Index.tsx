@@ -20,7 +20,7 @@ const Index: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
     {
       id: '1',
-      message: 'Hello! I\'m your medical assistant. Please describe your symptoms or ask any health-related questions, and I\'ll try to help. Remember, this is not a substitute for professional medical care.',
+      message: 'Hello! I\'m your medical assistant powered by Dialogflow. Please describe your symptoms or ask any health-related questions, and I\'ll try to help. Remember, this is not a substitute for professional medical care.',
       isBot: true
     }
   ]);
@@ -54,15 +54,15 @@ const Index: React.FC = () => {
     
     try {
       if (apiKey.trim()) {
-        // Use AI-powered response
-        const aiPrompt = `Medical question: ${input}\n\nPlease provide medical advice, possible conditions, and recommendations. Include relevant medical information while reminding that this is not a substitute for professional medical care.`;
+        // Use Dialogflow-powered response
+        const aiPrompt = `${input}`;
         
         const aiResponse = await generateAIResponse(aiPrompt, apiKey);
         
         if (aiResponse.isError) {
           toast({
             title: "AI Error",
-            description: "Could not get an AI response. Please check your API key or try again later.",
+            description: "Could not get a Dialogflow response. Please check your API key or try again later.",
             variant: "destructive"
           });
           
@@ -71,7 +71,7 @@ const Index: React.FC = () => {
             ...prevMessages,
             {
               id: (Date.now() + 1).toString(),
-              message: "I'm sorry, I couldn't process your request. Please check your API key and try again.",
+              message: "I'm sorry, I couldn't process your request. Please check your Dialogflow API key and try again.",
               isBot: true
             }
           ]);
@@ -92,14 +92,14 @@ const Index: React.FC = () => {
           ...prevMessages,
           {
             id: (Date.now() + 1).toString(),
-            message: "To get accurate medical advice, please set your OpenAI API key using the button in the top-right corner. Without an API key, I can't provide personalized medical information.",
+            message: "To get accurate medical advice, please set your Dialogflow API key using the button in the top-right corner. Without an API key, I can't provide personalized medical information.",
             isBot: true
           }
         ]);
         
         toast({
           title: "API Key Required",
-          description: "Please set your OpenAI API key to use the medical assistant.",
+          description: "Please set your Dialogflow API key to use the medical assistant.",
           variant: "destructive"
         });
       }
@@ -136,7 +136,7 @@ const Index: React.FC = () => {
       <main className="flex-1 flex flex-col p-4 overflow-hidden">
         <div className="mb-3">
           <div className={`rounded-lg text-xs py-1 px-2 inline-block ${apiKey ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-            {apiKey ? 'AI-Powered Assistant' : 'API Key Required'}
+            {apiKey ? 'Dialogflow-Powered Assistant' : 'Dialogflow API Key Required'}
           </div>
         </div>
         

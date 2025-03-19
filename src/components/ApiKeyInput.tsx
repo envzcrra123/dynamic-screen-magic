@@ -31,13 +31,13 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
       onApiKeyChange(apiKey);
       toast({
         title: "API Key Saved",
-        description: "Your API key has been saved for this session."
+        description: "Your Dialogflow API key has been saved for this session."
       });
       setOpen(false);
     } else {
       toast({
         title: "Invalid API Key",
-        description: "Please enter a valid API key.",
+        description: "Please enter a valid Dialogflow API key.",
         variant: "destructive"
       });
     }
@@ -49,7 +49,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
     onApiKeyChange('');
     toast({
       title: "API Key Removed",
-      description: "Your API key has been removed."
+      description: "Your Dialogflow API key has been removed."
     });
     setOpen(false);
   };
@@ -69,16 +69,16 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({ onApiKeyChange }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>OpenAI API Key</DialogTitle>
+          <DialogTitle>Dialogflow API Key</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <p className="text-sm text-gray-600">
-            Enter your OpenAI API key to enable advanced AI-powered symptom analysis. 
+            Enter your Dialogflow API key to enable AI-powered symptom analysis. 
             Your key is stored locally in your browser and never sent to our servers.
           </p>
           <Input
             type="password"
-            placeholder="sk-..."
+            placeholder="Dialogflow API Key"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             className="w-full"
