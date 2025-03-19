@@ -9,7 +9,7 @@ export interface AIResponse {
 const medicalResponses: Record<string, string[]> = {
   'headache': [
     'Headaches can be caused by stress, dehydration, lack of sleep, or eye strain. For mild headaches, rest, hydration, and over-the-counter pain relievers may help. If headaches are severe or persistent, please consult a healthcare professional.',
-    'Your headache symptoms might be related to tension, migraines, or other factors. It's advisable to monitor your triggers such as diet, stress levels, and sleep patterns.',
+    'Your headache symptoms might be related to tension, migraines, or other factors. It\'s advisable to monitor your triggers such as diet, stress levels, and sleep patterns.',
   ],
   'fever': [
     'Fever is often a sign that your body is fighting an infection. Rest, fluids, and appropriate medication to reduce fever may help. If fever is high (above 103°F/39.4°C for adults) or persists for more than a few days, seek medical attention.',
@@ -24,7 +24,7 @@ const medicalResponses: Record<string, string[]> = {
     'Abdominal pain has many potential causes ranging from digestive issues to inflammation. Consider any recent dietary changes and whether the pain is localized or general.',
   ],
   'rash': [
-    'Rashes may be caused by allergies, infections, heat, or skin conditions. Keeping the area clean and dry, using mild soaps, and applying appropriate ointments may help. If a rash is widespread, painful, or doesn't improve, consult a dermatologist.',
+    'Rashes may be caused by allergies, infections, heat, or skin conditions. Keeping the area clean and dry, using mild soaps, and applying appropriate ointments may help. If a rash is widespread, painful, or doesn\'t improve, consult a dermatologist.',
     'Skin rashes can result from contact with irritants, allergic reactions, or underlying health conditions. Note when the rash appeared and any possible triggers to help identify the cause.',
   ],
   'dizziness': [
@@ -40,7 +40,7 @@ const symptomKeywords = Object.keys(medicalResponses);
 const generalResponses = [
   'Based on the information provided, it would be best to consult with a healthcare professional for a proper diagnosis. Remember that online information cannot replace personalized medical advice.',
   'I understand your concern about these symptoms. While I can provide general information, a healthcare provider would be best positioned to evaluate your specific situation.',
-  'The symptoms you've described could be related to several different conditions. Monitoring your symptoms and consulting with a medical professional would be the most appropriate next step.',
+  'The symptoms you\'ve described could be related to several different conditions. Monitoring your symptoms and consulting with a medical professional would be the most appropriate next step.',
   'Thank you for sharing your health concerns. For a comprehensive assessment, I recommend discussing these symptoms with a healthcare provider who can perform necessary examinations or tests.',
   'While I can offer general health information, your described symptoms should be evaluated by a medical professional for an accurate diagnosis and appropriate treatment recommendations.',
 ];
