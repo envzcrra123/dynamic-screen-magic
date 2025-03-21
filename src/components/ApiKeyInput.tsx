@@ -16,14 +16,14 @@ const ApiKeyInput: React.FC = () => {
             aria-label="About AI Model"
           >
             <Info size={14} />
-            AI Info
+            Medical Info
           </Button>
         </TooltipTrigger>
         <TooltipContent className="max-w-[300px] p-4">
           <p className="text-sm">
-            This medical assistant uses a local AI model that runs directly in your browser.
-            No external APIs are used, and your questions remain private.
-            For serious medical concerns, please consult a healthcare professional.
+            This medical assistant provides professional clinical information based on current medical knowledge.
+            All inquiries are processed with complete privacy and confidentiality.
+            The system is designed to complement, not replace, consultation with licensed healthcare providers.
           </p>
         </TooltipContent>
       </Tooltip>

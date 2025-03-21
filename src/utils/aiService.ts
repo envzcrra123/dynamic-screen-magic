@@ -17,113 +17,113 @@ const medicalKnowledgeBase: Record<string, MedicalCondition> = {
   headache: {
     keywords: ['headache', 'migraine', 'head pain', 'head ache', 'head hurts'],
     responses: [
-      'Headaches can be caused by stress, dehydration, lack of sleep, or eye strain. For mild headaches, rest, hydration, and over-the-counter pain relievers may help. If headaches are severe or persistent, please consult a healthcare professional.',
-      'Your headache symptoms might be related to tension, migraines, or other factors. It\'s advisable to monitor your triggers such as diet, stress levels, and sleep patterns.',
-      'Frequent headaches could indicate various conditions ranging from tension to more serious concerns. Consider the pattern, intensity, and any accompanying symptoms when discussing with a healthcare provider.'
+      'Headaches are commonly associated with stress, dehydration, inadequate sleep, or visual strain. For mild cases, adequate rest, hydration, and appropriate analgesics are recommended. Severe or persistent headaches warrant clinical evaluation.',
+      'Your headache presentation may be indicative of tension-type headache, migraine, or other underlying conditions. It is advisable to monitor potential triggers including dietary factors, stress levels, and sleep patterns.',
+      'Recurrent headaches require comprehensive evaluation. Consider the pattern, intensity, and associated symptoms when consulting with your healthcare provider for proper diagnosis and management.'
     ],
     severity: 'medium',
-    followUpQuestions: ['How long have you been experiencing headaches?', 'Are the headaches accompanied by other symptoms like nausea or sensitivity to light?']
+    followUpQuestions: ['What is the duration of your headache symptoms?', 'Are there associated symptoms such as photophobia or nausea?']
   },
   fever: {
     keywords: ['fever', 'high temperature', 'feeling hot', 'chills', 'sweating'],
     responses: [
-      'Fever is often a sign that your body is fighting an infection. Rest, fluids, and appropriate medication to reduce fever may help. If fever is high (above 103°F/39.4°C for adults) or persists for more than a few days, seek medical attention.',
-      'A fever typically indicates your immune system is responding to an infection or illness. Monitor your temperature, stay hydrated, and consult a doctor if it persists or is accompanied by other concerning symptoms.',
-      'Fever combined with other symptoms like cough, sore throat, or body aches might indicate a viral or bacterial infection. If symptoms worsen or don\'t improve within a few days, medical attention is recommended.'
+      'Fever indicates an immune response to potential infection. Treatment recommendations include adequate rest, hydration, and appropriate antipyretics. For temperatures exceeding 39.4°C (103°F) in adults or persistent fever beyond 72 hours, immediate medical consultation is indicated.',
+      'Elevated body temperature typically represents an immunological response to infection. Monitor temperature regularly, maintain hydration, and consult a healthcare provider if fever persists or if accompanied by concerning clinical manifestations.',
+      'Fever in conjunction with respiratory symptoms, pharyngitis, or myalgia may indicate viral or bacterial etiology. Clinical evaluation is recommended if symptoms persist beyond 48-72 hours or if there is significant deterioration.'
     ],
     severity: 'medium',
-    followUpQuestions: ['What is your current temperature?', 'Have you taken any medication to reduce the fever?']
+    followUpQuestions: ['What is your current temperature reading?', 'Have you administered any antipyretic medication?']
   },
   cough: {
     keywords: ['cough', 'coughing', 'hack', 'chest congestion', 'phlegm', 'mucus'],
     responses: [
-      'Coughs can be caused by viruses, allergies, or irritants. For dry coughs, staying hydrated and using cough drops may help. For productive coughs, expectorants might be beneficial. If coughing persists or is accompanied by difficulty breathing, consult a healthcare provider.',
-      'Your cough could be related to a respiratory infection, allergies, or irritation. Pay attention to any accompanying symptoms like fever or mucus production, which can help determine the cause.',
-      'A persistent cough lasting more than 2-3 weeks should be evaluated by a healthcare professional, especially if it produces colored phlegm or blood, or is accompanied by shortness of breath.'
+      'Cough may result from viral infection, allergic response, or environmental irritants. For non-productive cough, adequate hydration and antitussives may provide relief. For productive cough, expectorants may be beneficial. Dyspnea or persistent cough warrants clinical evaluation.',
+      'Your cough presentation may be associated with upper respiratory infection, allergic response, or bronchial irritation. Clinical correlation with accompanying symptoms such as fever or sputum production is valuable for determining etiology.',
+      'Persistent cough exceeding 2-3 weeks duration requires medical assessment, particularly if productive of purulent sputum, hemoptysis, or accompanied by respiratory distress.'
     ],
     severity: 'medium',
-    followUpQuestions: ['Is your cough productive (bringing up mucus) or dry?', 'Have you noticed any triggers that make the cough worse?']
+    followUpQuestions: ['Is your cough productive or non-productive?', 'Have you identified any exacerbating factors?']
   },
   stomachache: {
     keywords: ['stomachache', 'stomach pain', 'abdominal pain', 'tummy ache', 'gut pain', 'nausea', 'vomiting'],
     responses: [
-      'Stomach pain can result from indigestion, gas, food poisoning, or more serious conditions. Mild cases may respond to rest, clear fluids, and over-the-counter remedies. If pain is severe, persistent, or accompanied by other concerning symptoms, seek medical advice.',
-      'Abdominal pain has many potential causes ranging from digestive issues to inflammation. Consider any recent dietary changes and whether the pain is localized or general.',
-      'If your stomach pain is accompanied by fever, persistent vomiting, or inability to keep fluids down, these could be signs of a more serious condition requiring prompt medical attention.'
+      'Abdominal pain may result from digestive dysfunction, gastroenteritis, or more significant pathology. Mild cases may respond to rest, clear fluid intake, and appropriate symptomatic treatment. Severe, persistent, or associated symptoms require prompt medical assessment.',
+      'Epigastric discomfort has multiple potential etiologies ranging from gastritis to inflammatory processes. Consider recent dietary modifications and whether pain is localized or diffuse for diagnostic purposes.',
+      'If abdominal pain is accompanied by pyrexia, persistent emesis, or inability to maintain hydration, these may indicate significant pathology requiring immediate clinical evaluation.'
     ],
     severity: 'medium',
-    followUpQuestions: ['Where exactly is the pain located?', 'Does the pain come and go, or is it constant?']
+    followUpQuestions: ['Can you precisely localize the pain?', 'Is the pain intermittent or constant in nature?']
   },
   rash: {
     keywords: ['rash', 'skin irritation', 'hives', 'itchy skin', 'red spots', 'skin outbreak'],
     responses: [
-      'Rashes may be caused by allergies, infections, heat, or skin conditions. Keeping the area clean and dry, using mild soaps, and applying appropriate ointments may help. If a rash is widespread, painful, or doesn\'t improve, consult a dermatologist.',
-      'Skin rashes can result from contact with irritants, allergic reactions, or underlying health conditions. Note when the rash appeared and any possible triggers to help identify the cause.',
-      'If your rash is spreading rapidly, accompanied by fever, or causing significant discomfort, these could indicate a more serious condition requiring prompt medical evaluation.'
+      'Dermatological manifestations may result from allergic response, infectious process, thermal influence, or dermatological conditions. Management includes maintaining skin hygiene, avoiding irritants, and applying appropriate topical preparations. Widespread, painful, or non-resolving eruptions require dermatological consultation.',
+      'Cutaneous eruptions may result from contact with irritants, hypersensitivity reactions, or underlying systemic conditions. Documenting onset and potential precipitants will assist in identifying etiology.',
+      'Rapidly progressing cutaneous manifestations, particularly when accompanied by pyrexia or significant discomfort, may indicate serious conditions requiring prompt medical evaluation.'
     ],
     severity: 'medium',
-    followUpQuestions: ['When did you first notice the rash?', 'Is the rash itchy, painful, or neither?']
+    followUpQuestions: ['When did you first observe the cutaneous manifestation?', 'Is the affected area pruritic, painful, or asymptomatic?']
   },
   dizziness: {
     keywords: ['dizzy', 'dizziness', 'lightheaded', 'vertigo', 'faint', 'balance problems'],
     responses: [
-      'Dizziness can be related to inner ear issues, low blood pressure, dehydration, or medication side effects. Sitting or lying down when feeling dizzy and staying hydrated may help. For recurrent or severe dizziness, medical evaluation is recommended.',
-      'Feeling dizzy or lightheaded might be due to various factors including vestibular issues, blood pressure changes, or dehydration. Take note of when symptoms occur and what seems to trigger or relieve them.',
-      'Persistent or severe dizziness, especially when accompanied by other neurological symptoms like headache, vision changes, or difficulty speaking, should prompt immediate medical attention.'
+      'Vertigo or lightheadedness may relate to vestibular dysfunction, orthostatic hypotension, dehydration, or medication effect. Assuming a recumbent position when symptomatic and ensuring adequate hydration may provide relief. Recurrent or severe symptoms warrant medical evaluation.',
+      'Sensations of lightheadedness or imbalance may result from various factors including vestibular disorders, hemodynamic changes, or fluid status. Documentation of precipitating factors and alleviating measures provides valuable clinical information.',
+      'Persistent or severe dizziness, particularly when accompanied by neurological manifestations such as cephalgia, visual disturbances, or dysarthria, necessitates immediate medical attention.'
     ],
     severity: 'medium',
-    followUpQuestions: ['Does the dizziness occur when changing positions?', 'Have you experienced any hearing changes along with the dizziness?']
+    followUpQuestions: ['Do positional changes precipitate symptoms?', 'Are there associated auditory changes with episodes of dizziness?']
   },
   fatigue: {
     keywords: ['fatigue', 'tired', 'exhaustion', 'no energy', 'lethargy', 'weakness'],
     responses: [
-      'Fatigue can result from inadequate sleep, poor nutrition, stress, or underlying medical conditions. Ensuring proper rest, balanced diet, and regular exercise may help. If fatigue is severe or persistent despite lifestyle changes, consider consulting a healthcare provider.',
-      'Unexplained or persistent fatigue might be linked to various factors including anemia, thyroid issues, depression, or chronic conditions. Tracking your energy levels and any associated symptoms can provide valuable information for assessment.',
-      'When fatigue significantly interferes with daily activities or is accompanied by other symptoms like unexplained weight loss or fever, it\'s important to seek medical evaluation to rule out serious conditions.'
+      'Fatigue may result from inadequate rest, nutritional deficiencies, psychological stressors, or underlying medical conditions. Ensuring proper sleep hygiene, balanced nutrition, and regular physical activity is recommended. Severe or persistent fatigue despite lifestyle modifications warrants clinical consultation.',
+      'Unexplained or persistent fatigue may be associated with various conditions including anemia, thyroid dysfunction, mood disorders, or chronic illness. Tracking energy levels and associated symptomatology provides valuable diagnostic information.',
+      'When fatigue significantly impairs daily functioning or presents with other concerning symptoms such as unexplained weight loss or pyrexia, comprehensive medical evaluation is essential to exclude serious underlying conditions.'
     ],
     severity: 'medium',
-    followUpQuestions: ['Has your fatigue developed gradually or suddenly?', 'How is your sleep quality and duration?']
+    followUpQuestions: ['Has your fatigue developed gradually or acutely?', 'How would you characterize your sleep quality and duration?']
   },
   sore_throat: {
     keywords: ['sore throat', 'throat pain', 'painful swallowing', 'strep', 'scratchy throat'],
     responses: [
-      'Sore throats are commonly caused by viral infections like colds or flu, but can also result from bacterial infections, allergies, or environmental irritants. Gargling with warm salt water, using throat lozenges, and staying hydrated may provide relief for minor cases.',
-      'If your sore throat is severe, persists longer than a week, or is accompanied by high fever, difficulty swallowing, or enlarged lymph nodes, it might indicate a bacterial infection like strep throat that requires medical attention.',
-      'Repeated or chronic sore throats might be related to issues such as allergies, acid reflux, or environmental factors. Identifying and addressing these underlying causes can help prevent recurrence.'
+      'Pharyngitis is commonly caused by viral pathogens, but may also result from bacterial infection, allergic response, or environmental irritants. Symptomatic management includes warm saline gargles, appropriate lozenges, and adequate hydration for mild cases.',
+      'Severe odynophagia, persistent symptoms beyond 7 days, or accompanying manifestations such as high-grade fever, lymphadenopathy, or tonsillar exudates may indicate bacterial etiology requiring medical evaluation and potential antimicrobial therapy.',
+      'Recurrent or chronic pharyngeal discomfort may relate to underlying conditions such as allergic rhinitis, gastroesophageal reflux, or environmental factors. Identifying and addressing these underlying causes is essential for symptom management.'
     ],
     severity: 'medium',
-    followUpQuestions: ['Is the pain on one side or both sides of your throat?', 'Have you noticed any white patches in your throat?']
+    followUpQuestions: ['Is the discomfort unilateral or bilateral?', 'Have you observed any tonsillar exudates or white patches?']
   },
   breathing: {
     keywords: ['breathing difficulty', 'shortness of breath', 'can\'t breathe', 'breathless', 'wheezing'],
     responses: [
-      'Difficulty breathing requires prompt medical attention, especially if it's sudden or severe. It can be caused by asthma, allergic reactions, infections, or heart problems.',
-      'If you're experiencing breathing difficulties along with chest pain, blue lips or fingers, or extreme anxiety, please seek emergency medical care immediately.',
-      'For milder, chronic breathing issues, triggers may include allergens, exercise, stress, or environmental factors. Working with a healthcare provider to identify and manage these triggers is important.'
+      'Dyspnea requires prompt medical attention, particularly if acute in onset or severe in nature. Potential etiologies include bronchospasm, allergic reaction, infectious process, or cardiac pathology.',
+      'If experiencing respiratory distress accompanied by chest pain, cyanosis, or altered mental status, immediate emergency medical intervention is indicated.',
+      'For chronic or recurrent dyspnea, potential triggers may include allergens, physical exertion, emotional stressors, or environmental factors. Comprehensive evaluation and management strategy development with a healthcare provider is essential.'
     ],
     severity: 'high',
-    followUpQuestions: ['Did the breathing difficulty start suddenly or gradually?', 'Does anything make the breathing easier or worse?']
+    followUpQuestions: ['Did the dyspnea develop acutely or gradually?', 'Are there factors that ameliorate or exacerbate symptoms?']
   },
   chest_pain: {
     keywords: ['chest pain', 'chest tightness', 'heart pain', 'pressure in chest'],
     responses: [
-      'Chest pain can be serious and requires immediate medical attention, especially if accompanied by shortness of breath, sweating, nausea, or pain radiating to the arm or jaw, as these may indicate a heart attack.',
-      'Not all chest pain is heart-related - it can also be caused by muscle strain, digestive issues like acid reflux, or anxiety. However, it\'s always safest to have chest pain evaluated by a medical professional.',
-      'If you\'re experiencing chest pain, don\'t wait to seek help or try to diagnose yourself. Call emergency services or have someone take you to the nearest emergency department immediately.'
+      'Chest pain requires immediate medical assessment, particularly when accompanied by dyspnea, diaphoresis, nausea, or radiation to the arm or jaw, as these may indicate acute coronary syndrome.',
+      'Not all chest discomfort is cardiac in origin - potential etiologies include musculoskeletal strain, gastroesophageal reflux, or anxiety. However, thorough evaluation is warranted to exclude serious cardiovascular pathology.',
+      'For patients experiencing chest pain, immediate medical attention is recommended rather than attempted self-diagnosis. Emergency medical services should be activated or immediate transport to an emergency department arranged.'
     ],
     severity: 'high',
-    followUpQuestions: ['Is the pain sharp, dull, or pressure-like?', 'Does the pain spread to your arm, jaw, or back?']
+    followUpQuestions: ['Is the pain sharp, dull, or pressure-like in quality?', 'Does the discomfort radiate to the arm, jaw, or back?']
   }
 };
 
 // Enhanced general responses
 const generalResponses = [
-  'Based on the information provided, it would be best to consult with a healthcare professional for a proper diagnosis. Remember that online information cannot replace personalized medical advice.',
-  'I understand your concern about these symptoms. While I can provide general information, a healthcare provider would be best positioned to evaluate your specific situation.',
-  'The symptoms you\'ve described could be related to several different conditions. Monitoring your symptoms and consulting with a medical professional would be the most appropriate next step.',
-  'Thank you for sharing your health concerns. For a comprehensive assessment, I recommend discussing these symptoms with a healthcare provider who can perform necessary examinations or tests.',
-  'While I can offer general health information, your described symptoms should be evaluated by a medical professional for an accurate diagnosis and appropriate treatment recommendations.',
-  'It\'s important to note that individual health situations vary greatly. The information I provide is general in nature, and your specific symptoms may require personalized medical attention.',
+  'Based on the information provided, clinical evaluation is recommended for proper diagnosis. These assessments are intended to supplement, not replace, personalized medical consultation.',
+  'I understand your clinical concerns. While I can provide general medical information, direct evaluation by a healthcare provider would be optimal for your specific presentation.',
+  'The symptoms described may be consistent with several clinical entities. Monitoring symptom progression and consulting with a healthcare professional is advised for appropriate management.',
+  'Thank you for sharing your health concerns. For comprehensive assessment, discussion with a healthcare provider who can perform appropriate examination and diagnostic testing is recommended.',
+  'While I can offer general clinical information, your specific presentation should be evaluated by a medical professional for accurate diagnosis and treatment recommendations.',
+  'Individual clinical presentations vary significantly. The information provided is general in nature, and your specific symptoms may require personalized medical assessment.',
 ];
 
 // Training data for simple pattern recognition
@@ -137,10 +137,10 @@ const trainingPatterns = [
 
 // Response templates for different question types
 const responseTemplates = {
-  treatment: 'Treatment options may include {treatments}. However, it\'s important to consult with a healthcare provider before starting any treatment.',
+  treatment: 'Treatment options may include {treatments}. However, it is important to consult with a healthcare provider before initiating any treatment.',
   severity: 'The severity of {condition} can vary widely. {severity_info}',
   duration: '{condition} typically {duration_info}. If symptoms persist beyond this timeframe, medical evaluation is recommended.',
-  medical_advice: 'For {condition}, it\'s advisable to seek medical attention {when_to_see_doctor}.',
+  medical_advice: 'For {condition}, it is advisable to seek medical attention {when_to_see_doctor}.',
   cause: '{condition} can be caused by {causes}. Identifying specific triggers in your case may help with management.'
 };
 
@@ -186,13 +186,13 @@ const generateResponse = (prompt: string): string => {
     // If question type is identified, use appropriate template
     if (questionType && responseTemplates[questionType as keyof typeof responseTemplates]) {
       // This is a simple placeholder - in a real system, we'd have more sophisticated filling of templates
-      return `Based on your mention of ${condition}, I can provide some information.
+      return `Based on your mention of ${condition}, I can provide the following clinical information:
 
 ${conditionData.responses[Math.floor(Math.random() * conditionData.responses.length)]}
 
-${conditionData.severity === 'high' ? 'This condition may require prompt medical attention.' : 
-  conditionData.severity === 'medium' ? 'This condition may require medical attention if symptoms persist or worsen.' :
-  'This condition is typically manageable with self-care, but consult a doctor if concerned.'}`;
+${conditionData.severity === 'high' ? 'This condition requires prompt medical attention.' : 
+  conditionData.severity === 'medium' ? 'This condition may require medical evaluation if symptoms persist or worsen.' :
+  'This condition is typically manageable with appropriate care, but clinical consultation is recommended if concerned.'}`;
     }
     
     // Otherwise return a general response about the condition
@@ -235,18 +235,18 @@ export const generateAIResponse = async (prompt: string): Promise<AIResponse> =>
         medicalKnowledgeBase[conversationContext.lastMentionedCondition].followUpQuestions) {
       const followUps = medicalKnowledgeBase[conversationContext.lastMentionedCondition].followUpQuestions;
       if (followUps && followUps.length > 0) {
-        followUpText = `\n\nTo better understand your situation: ${followUps[Math.floor(Math.random() * followUps.length)]}`;
+        followUpText = `\n\nTo better assess your condition: ${followUps[Math.floor(Math.random() * followUps.length)]}`;
       }
     }
     
     return {
-      message: response + followUpText + '\n\nDisclaimer: This information is for educational purposes only and should not be used for self-diagnosis or as a substitute for professional medical advice.',
+      message: response + followUpText,
       isError: false
     };
   } catch (error) {
     console.error('AI service error:', error);
     return {
-      message: 'Sorry, there was an error generating a response. Please try again later.',
+      message: 'We apologize, but there was an error processing your inquiry. Please try again.',
       isError: true
     };
   }
