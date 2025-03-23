@@ -16,14 +16,14 @@ const ApiKeyInput: React.FC = () => {
             aria-label="About AI Model"
           >
             <Info size={14} />
-            Medical Assistance
+            Empathetic Medical Assistant
           </Button>
         </TooltipTrigger>
         <TooltipContent className="max-w-[300px] p-4">
           <p className="text-sm">
             This medical assistant provides professional clinical information based on current medical knowledge and best practices.
             The system recognizes emotional cues and offers empathetic support alongside medical guidance.
-            It can detect when you're feeling frustrated, anxious, or confused, and adapts its responses accordingly to provide both emotional support and accurate medical information.
+            It can detect when you're feeling frustrated, anxious, confused, or down, and adapts its responses accordingly to provide both emotional support and accurate medical information.
           </p>
         </TooltipContent>
       </Tooltip>

@@ -17,6 +17,18 @@ const SymptomInput: React.FC<{
     }
   };
 
+  // Array of example prompts for the input suggestion
+  const examplePrompts = [
+    "I'm feeling anxious about my headache",
+    "What can I do to feel better?",
+    "I'm tired of this pain, it's frustrating",
+    "I feel so down today with these symptoms",
+    "I'm worried, is my fever serious?"
+  ];
+  
+  // Randomly select one example prompt
+  const randomPrompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
+
   return (
     <div className="w-full bg-gray-100 border border-gray-300 rounded-lg p-2 relative flex flex-col">
       <div className="flex items-center w-full">
@@ -54,7 +66,7 @@ const SymptomInput: React.FC<{
       </div>
       
       <div className="text-xs text-gray-500 mt-1 px-2">
-        Try: "I'm feeling anxious about my headache" or "What can I do to feel better?"
+        Try: "{randomPrompt}"
       </div>
     </div>
   );

@@ -18,7 +18,8 @@ type IntentType =
   | 'user_frustration'
   | 'user_anxiety'
   | 'user_confusion'
-  | 'self_care_request';
+  | 'self_care_request'
+  | 'emotional_support'; // New intent for general emotional support
 
 // Define entity types
 interface Entity {
@@ -35,7 +36,7 @@ interface ConversationContext {
   lastMentionedMedication: string | null;
   questionCount: number;
   lastResponseTime: number;
-  emotionalState: 'neutral' | 'frustrated' | 'anxious' | 'confused' | null;
+  emotionalState: 'neutral' | 'frustrated' | 'anxious' | 'confused' | 'down' | null;
 }
 
 // Define the intent recognition patterns
@@ -114,13 +115,27 @@ const entityDefinitions: Record<string, EntityDefinition> = {
     values: {
       'frustration': ['frustrating', 'annoying', 'fed up', 'tired of this', 'irritating', 'bothering', 'sick of', 'hate feeling', 'ugh', 'argh', 'hassle'],
       'anxiety': ['worried', 'anxious', 'scared', 'frightened', 'nervous', 'stressed', 'fear', 'concerned', 'panic', 'terrified'],
-      'confusion': ['confused', 'unsure', 'don\'t understand', 'not clear', 'lost', 'puzzled', 'uncertain', 'don\'t know what to do', 'overwhelmed']
+      'confusion': ['confused', 'unsure', 'don\'t understand', 'not clear', 'lost', 'puzzled', 'uncertain', 'don\'t know what to do', 'overwhelmed'],
+      'sadness': ['sad', 'down', 'depressed', 'low', 'unhappy', 'miserable', 'blue', 'gloomy', 'heartbroken', 'grief', 'lonely', 'hopeless'],
+      'weakness': ['weak', 'no strength', 'feeble', 'frail', 'powerless', 'fragile', 'vulnerable']
     }
   }
 };
 
 // Intent patterns for recognition
 const intentPatterns: IntentPattern[] = [
+  {
+    intent: 'emotional_support',
+    patterns: [
+      /i('m| am) (so |really |very )?(tired of this|feeling (down|sad)|feeling this will never end|weak and scared)/i,
+      /i feel (so |really |very )?(down|sad|low) today/i,
+      /i feel like this will never end/i,
+      /i('m| am) (feeling|so) weak/i,
+      /everything feels (hopeless|pointless)/i,
+      /nothing seems to (work|help)/i
+    ],
+    entities: ['emotion']
+  },
   {
     intent: 'user_frustration',
     patterns: [
@@ -425,6 +440,11 @@ const emotionalResponses = {
     "I understand this can be confusing. Let me try to provide some clarity to help you navigate this situation.",
     "Health information can often be overwhelming. I'll try to explain things in a straightforward way to help you understand."
   ],
+  down: [
+    "It sounds like you're going through a tough time, and I want to support you. You're not alone in this.",
+    "I'm sorry you're feeling down. It's important to acknowledge these feelings, and I'm here to support you through this.",
+    "When we're feeling low, even small steps can help. I'm here to support you however I can."
+  ],
   neutral: [
     "I'm here to help with your health questions. What specific information would be most helpful for you?",
     "I'd be happy to provide information about your health concerns. How can I best assist you today?",
@@ -458,6 +478,12 @@ const selfCareTips = {
     "Consider short power naps (15-20 minutes) if needed during the day.",
     "Stay hydrated and maintain balanced nutrition.",
     "Gentle movement like stretching or a short walk might help boost energy levels."
+  ],
+  emotional: [
+    "Take a moment to focus on your breathing, inhaling slowly for 4 counts and exhaling for 6.",
+    "It can help to write down your thoughts and feelings when you're going through a tough time.",
+    "Try to do one small thing that usually brings you comfort, even if it's just making a cup of tea.",
+    "Be gentle with yourself - it's okay to take things one step at a time."
   ]
 };
 
@@ -503,7 +529,7 @@ const identifyIntent = (input: string, entities: Entity[]): IntentType => {
   if (emotionEntities.length > 0) {
     // Check each emotion-related intent pattern for a match
     for (const intentPattern of intentPatterns.filter(pattern => 
-      ['user_frustration', 'user_anxiety', 'user_confusion'].includes(pattern.intent))) {
+      ['user_frustration', 'user_anxiety', 'user_confusion', 'emotional_support'].includes(pattern.intent))) {
       for (const pattern of intentPattern.patterns) {
         if (pattern.test(input)) {
           return intentPattern.intent;
@@ -541,6 +567,21 @@ const identifyIntent = (input: string, entities: Entity[]): IntentType => {
     }
   }
   
+  // Check for emotional words even if no intent pattern matches directly
+  // This serves as a fallback to catch emotional content that didn't match specific patterns
+  if (emotionEntities.length > 0) {
+    const emotionValues = emotionEntities.map(entity => entity.value);
+    if (emotionValues.includes('sadness')) {
+      return 'emotional_support';
+    } else if (emotionValues.includes('frustration')) {
+      return 'user_frustration';
+    } else if (emotionValues.includes('anxiety')) {
+      return 'user_anxiety';
+    } else if (emotionValues.includes('confusion')) {
+      return 'user_confusion';
+    }
+  }
+  
   // Default to general inquiry if no specific intent is matched
   return 'general_inquiry';
 };
@@ -556,6 +597,9 @@ const updateEmotionalState = (intent: IntentType): void => {
       break;
     case 'user_confusion':
       conversationContext.emotionalState = 'confused';
+      break;
+    case 'emotional_support':
+      conversationContext.emotionalState = 'down';
       break;
     default:
       // Keep the current emotional state if it exists
@@ -613,8 +657,14 @@ const generateResponseForIntent = (intent: IntentType, entities: Entity[], input
   }
   
   // Handle emotional intents first
-  if (['user_frustration', 'user_anxiety', 'user_confusion'].includes(intent)) {
+  if (['user_frustration', 'user_anxiety', 'user_confusion', 'emotional_support'].includes(intent)) {
     const empatheticResponse = generateEmpatheticResponse();
+    
+    // If emotional_support is detected, provide a more supportive response
+    if (intent === 'emotional_support') {
+      const selfCareForEmotions = generateSelfCareTips('emotional');
+      return `${empatheticResponse}\n\nWould you like me to help you understand your symptoms, or maybe suggest ways to feel a little better?\n\n${selfCareForEmotions}`;
+    }
     
     // If we have a previously mentioned condition, add relevant medical info
     if (conversationContext.lastMentionedCondition && medicalKnowledgeBase[conversationContext.lastMentionedCondition]) {
