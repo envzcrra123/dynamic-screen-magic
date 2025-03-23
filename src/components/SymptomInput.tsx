@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -9,6 +9,23 @@ const SymptomInput: React.FC<{
   placeholder?: string;
 }> = ({ onSubmit, loading, placeholder = "Enter your symptoms..." }) => {
   const [input, setInput] = useState('');
+  const [suggestionIndex, setSuggestionIndex] = useState(0);
+  
+  const empathyPromptSuggestions = [
+    "I have a headache, what should I take?",
+    "I'm feeling anxious about my symptoms, can you help?",
+    "Is my fever serious? I'm worried about it.",
+    "I'm confused about which medication to take for my cough."
+  ];
+  
+  // Rotate through suggestions periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSuggestionIndex((prevIndex) => (prevIndex + 1) % empathyPromptSuggestions.length);
+    }, 10000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSubmit = () => {
     if (input.trim()) {
@@ -54,7 +71,7 @@ const SymptomInput: React.FC<{
       </div>
       
       <div className="text-xs text-gray-500 mt-1 px-2">
-        Try: "I have a headache, what should I take?" or "Is my fever serious?"
+        Try: "{empathyPromptSuggestions[suggestionIndex]}"
       </div>
     </div>
   );
