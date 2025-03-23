@@ -28,7 +28,7 @@ const SymptomInput: React.FC<{
         </button>
         
         <textarea
-          placeholder="Ask about symptoms, medications, or treatment options..."
+          placeholder="Ask about symptoms, medications, or how you're feeling..."
           className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-gray-700 input-placeholder h-10 py-2"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -54,7 +54,7 @@ const SymptomInput: React.FC<{
       </div>
       
       <div className="text-xs text-gray-500 mt-1 px-2">
-        Try: "I have a headache, what should I take?" or "Is my fever serious?"
+        Try: "I'm feeling anxious about my headache" or "What can I do to feel better?"
       </div>
     </div>
   );
