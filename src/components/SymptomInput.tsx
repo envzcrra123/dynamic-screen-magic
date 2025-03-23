@@ -17,6 +17,20 @@ const SymptomInput: React.FC<{
     }
   };
 
+  // Sample prompts that showcase both medical and emotional queries
+  const samplePrompts = [
+    "I have a headache, what should I take?",
+    "Is my fever serious?",
+    "I'm feeling really anxious about these symptoms",
+    "This is so frustrating, I've had this cough for days",
+    "What can I do to feel better right now?"
+  ];
+
+  // Get a random sample prompt
+  const getRandomPrompt = () => {
+    return samplePrompts[Math.floor(Math.random() * samplePrompts.length)];
+  };
+
   return (
     <div className="w-full bg-gray-100 border border-gray-300 rounded-lg p-2 relative flex flex-col">
       <div className="flex items-center w-full">
@@ -28,7 +42,7 @@ const SymptomInput: React.FC<{
         </button>
         
         <textarea
-          placeholder="Ask about symptoms, medications, or treatment options..."
+          placeholder={placeholder}
           className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-gray-700 input-placeholder h-10 py-2"
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -54,7 +68,7 @@ const SymptomInput: React.FC<{
       </div>
       
       <div className="text-xs text-gray-500 mt-1 px-2">
-        Try: "I have a headache, what should I take?" or "Is my fever serious?"
+        Try: "{getRandomPrompt()}" or "I'm feeling anxious about my symptoms"
       </div>
     </div>
   );
