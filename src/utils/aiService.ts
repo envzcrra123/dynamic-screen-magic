@@ -14,12 +14,7 @@ type IntentType =
   | 'treatment_duration'
   | 'severity_assessment'
   | 'follow_up_needed'
-  | 'general_inquiry'
-  | 'user_frustration'
-  | 'user_anxiety'
-  | 'user_confusion'
-  | 'self_care_request'
-  | 'emergency_support';
+  | 'general_inquiry';
 
 // Define entity types
 interface Entity {
@@ -36,7 +31,6 @@ interface ConversationContext {
   lastMentionedMedication: string | null;
   questionCount: number;
   lastResponseTime: number;
-  lastEmotionalState: 'neutral' | 'frustrated' | 'anxious' | 'confused' | 'urgent' | null;
 }
 
 // Define the intent recognition patterns
@@ -77,8 +71,7 @@ let conversationContext: ConversationContext = {
   lastMentionedCondition: '',
   lastMentionedMedication: null,
   questionCount: 0,
-  lastResponseTime: 0,
-  lastEmotionalState: null
+  lastResponseTime: 0
 };
 
 // Entity definitions
@@ -108,16 +101,6 @@ const entityDefinitions: Record<string, EntityDefinition> = {
       'antibiotics': ['antibiotics', 'amoxicillin', 'penicillin', 'azithromycin'],
       'decongestant': ['decongestant', 'sudafed', 'pseudoephedrine'],
       'antacid': ['antacid', 'tums', 'rolaids', 'maalox']
-    }
-  },
-  emotion: {
-    type: 'emotion',
-    values: {
-      'frustration': ['frustrated', 'annoying', 'irritating', 'fed up', 'argh', 'ugh', 'annoyed', 'irritated', 'hassle'],
-      'anxiety': ['anxious', 'worried', 'scared', 'afraid', 'nervous', 'stressed', 'stress', 'panic', 'fear', 'concern', 'concerning'],
-      'confusion': ['confused', 'unsure', 'uncertain', 'don\'t understand', 'not sure', 'lost', 'puzzled'],
-      'hopelessness': ['hopeless', 'giving up', 'no hope', 'pointless', 'useless', 'helpless'],
-      'urgency': ['urgent', 'emergency', 'immediate', 'right now', 'asap', 'hurry']
     }
   }
 };
@@ -202,64 +185,6 @@ const intentPatterns: IntentPattern[] = [
       /is ([a-z\s]+) contagious/i
     ],
     entities: ['symptom']
-  },
-  // New emotional intents
-  {
-    intent: 'user_frustration',
-    patterns: [
-      /(this is|so|very|really|quite|extremely) (frustrating|annoying|irritating)/i,
-      /I('m| am) (frustrated|annoyed|irritated)/i,
-      /(hate|tired of) (being|feeling) (sick|ill|unwell)/i,
-      /ugh|argh|grr/i,
-      /this is (such a|a) hassle/i,
-      /fed up/i
-    ],
-    entities: ['emotion']
-  },
-  {
-    intent: 'user_anxiety',
-    patterns: [
-      /(I('m| am)|feeling) (worried|scared|anxious|afraid|nervous|concerned)/i,
-      /(this|it) (is|makes me) (worrying|scary|concerning)/i,
-      /I don't know what (to do|will happen)/i,
-      /I('m| am) (stressed|panicking)/i,
-      /have anxiety|anxiety attack/i,
-      /is this serious/i
-    ],
-    entities: ['emotion']
-  },
-  {
-    intent: 'user_confusion',
-    patterns: [
-      /I('m| am) (confused|not sure|unsure|uncertain)/i,
-      /I don't (understand|know|get it)/i,
-      /(this is|so) confusing/i,
-      /what does (this|that|it) mean/i,
-      /why (is this happening|am I feeling this way)/i,
-      /not making sense/i
-    ],
-    entities: ['emotion']
-  },
-  {
-    intent: 'self_care_request',
-    patterns: [
-      /how (can|do) I (feel better|improve|recover)/i,
-      /what (can|should) I do (at home|to feel better|for self care)/i,
-      /any (tips|advice|suggestions) (for|to) (feeling better|recovery|self care)/i,
-      /how to (take care|look after) (myself|my health)/i
-    ]
-  },
-  {
-    intent: 'emergency_support',
-    patterns: [
-      /I (feel|am feeling) hopeless/i,
-      /I (want to|feel like) giving up/i,
-      /I need (urgent|immediate|emergency) help/i,
-      /This is an emergency/i,
-      /I don't think I (can|will) make it/i,
-      /I('m| am) (really|extremely|very) (scared|afraid|terrified)/i
-    ],
-    entities: ['emotion']
   }
 ];
 
@@ -423,44 +348,6 @@ const medicationDatabase: Record<string, MedicationInfo> = {
   }
 };
 
-// New emotional responses database
-const emotionalResponsesDatabase = {
-  frustration: [
-    "I understand this is frustrating. Let's work through this together. Could you tell me more about what you're experiencing?",
-    "I can hear your frustration. It's completely valid to feel this way when dealing with health concerns. I'm here to help make this easier for you.",
-    "I'm sorry you're feeling frustrated. Health concerns can be challenging to navigate. I'm here to provide clear information and support."
-  ],
-  anxiety: [
-    "I understand you're feeling anxious, and that's completely natural. Take a deep breath—I'm here to help you make sense of what's happening.",
-    "It's okay to feel worried about your health. Many people experience similar concerns. Let's take this one step at a time to address what's troubling you.",
-    "I hear your concern. Feeling anxious about health issues is common and understandable. I'm here to provide information that might help ease some of that worry."
-  ],
-  confusion: [
-    "It sounds like you're feeling uncertain, which is completely understandable. Medical information can be complex, but I'm here to help make it clearer for you.",
-    "I understand this may be confusing. Let me try to explain things in a way that's easier to understand. What specific aspect would you like me to clarify?",
-    "It's perfectly normal to feel confused about health matters. I can provide clearer information to help you better understand what's happening."
-  ],
-  emergency: [
-    "I'm concerned about what you're describing. This sounds like a situation that requires immediate medical attention. Please contact emergency services or go to your nearest emergency department without delay.",
-    "Based on what you're describing, I strongly recommend seeking immediate medical help. Your health and safety are the top priority right now.",
-    "This situation requires urgent medical attention. Please call emergency services or have someone take you to the nearest emergency department immediately."
-  ]
-};
-
-// Self-care tips database
-const selfCareTipsDatabase = [
-  "Take time to rest and allow your body to recover. Adequate sleep is essential for healing.",
-  "Stay hydrated by drinking plenty of water throughout the day, especially if you're experiencing fever or other symptoms that may lead to dehydration.",
-  "Practice deep breathing exercises to help reduce stress and anxiety—inhale slowly through your nose for 4 counts, hold for 1 count, and exhale through your mouth for 6 counts.",
-  "Apply a cool compress to your forehead if you're experiencing headache or fever.",
-  "For muscle aches, a warm bath or heating pad may provide relief.",
-  "Maintain a balanced diet with plenty of fruits and vegetables to support your immune system.",
-  "Limit screen time if you're experiencing headaches or eye strain.",
-  "If stress is contributing to your symptoms, consider mindfulness practices or gentle stretching.",
-  "Gargle with warm saltwater for sore throat relief (½ teaspoon of salt in 8 ounces of warm water).",
-  "Stay connected with friends and family who can provide emotional support during your recovery."
-];
-
 // Function to identify entities in user input
 const identifyEntities = (input: string): Entity[] => {
   const entities: Entity[] = [];
@@ -498,33 +385,8 @@ const identifyEntities = (input: string): Entity[] => {
 
 // Function to identify intent in user input
 const identifyIntent = (input: string, entities: Entity[]): IntentType => {
-  // First check for emergency intents as highest priority
-  for (const pattern of intentPatterns.find(p => p.intent === 'emergency_support')?.patterns || []) {
-    if (pattern.test(input)) {
-      return 'emergency_support';
-    }
-  }
-  
-  // Check for emotional intents next
-  const emotionalIntents: IntentType[] = ['user_frustration', 'user_anxiety', 'user_confusion'];
-  for (const emotionalIntent of emotionalIntents) {
-    const intentPattern = intentPatterns.find(p => p.intent === emotionalIntent);
-    if (intentPattern) {
-      for (const pattern of intentPattern.patterns) {
-        if (pattern.test(input)) {
-          return emotionalIntent;
-        }
-      }
-    }
-  }
-  
-  // Check each intent pattern for a match (regular medical intents)
+  // Check each intent pattern for a match
   for (const intentPattern of intentPatterns) {
-    // Skip emotional intents as we already checked them
-    if (emotionalIntents.includes(intentPattern.intent) || intentPattern.intent === 'emergency_support') {
-      continue;
-    }
-    
     // Skip if this intent requires context and we don't have the right one
     if (intentPattern.requiredContext && 
         (!conversationContext.lastIntent || 
@@ -556,70 +418,8 @@ const identifyIntent = (input: string, entities: Entity[]): IntentType => {
   return 'general_inquiry';
 };
 
-// Update user's emotional state based on detected entities and intent
-const updateEmotionalState = (intent: IntentType, entities: Entity[]): void => {
-  const emotionEntity = entities.find(entity => entity.name === 'emotion');
-  
-  if (intent === 'user_frustration' || (emotionEntity && emotionEntity.value === 'frustration')) {
-    conversationContext.lastEmotionalState = 'frustrated';
-  } else if (intent === 'user_anxiety' || (emotionEntity && emotionEntity.value === 'anxiety')) {
-    conversationContext.lastEmotionalState = 'anxious';
-  } else if (intent === 'user_confusion' || (emotionEntity && emotionEntity.value === 'confusion')) {
-    conversationContext.lastEmotionalState = 'confused';
-  } else if (intent === 'emergency_support' || (emotionEntity && (emotionEntity.value === 'hopelessness' || emotionEntity.value === 'urgency'))) {
-    conversationContext.lastEmotionalState = 'urgent';
-  } else if (!conversationContext.lastEmotionalState) {
-    // Only set to neutral if there's no previous emotional state
-    conversationContext.lastEmotionalState = 'neutral';
-  }
-};
-
-// Generate empathetic response based on emotional state
-const generateEmpatheticResponse = (): string => {
-  switch (conversationContext.lastEmotionalState) {
-    case 'frustrated':
-      return emotionalResponsesDatabase.frustration[Math.floor(Math.random() * emotionalResponsesDatabase.frustration.length)];
-    case 'anxious':
-      return emotionalResponsesDatabase.anxiety[Math.floor(Math.random() * emotionalResponsesDatabase.anxiety.length)];
-    case 'confused':
-      return emotionalResponsesDatabase.confusion[Math.floor(Math.random() * emotionalResponsesDatabase.confusion.length)];
-    case 'urgent':
-      return emotionalResponsesDatabase.emergency[Math.floor(Math.random() * emotionalResponsesDatabase.emergency.length)];
-    default:
-      return '';
-  }
-};
-
-// Generate self-care tips
-const generateSelfCareTips = (count: number = 3): string => {
-  // Shuffle the tips array and take the first 'count' items
-  const shuffledTips = [...selfCareTipsDatabase].sort(() => 0.5 - Math.random());
-  const selectedTips = shuffledTips.slice(0, count);
-  
-  return selectedTips.map((tip, index) => `${index + 1}. ${tip}`).join('\n');
-};
-
 // Function to generate a response based on intent and entities
 const generateResponseForIntent = (intent: IntentType, entities: Entity[], input: string): string => {
-  // Update user's emotional state
-  updateEmotionalState(intent, entities);
-  
-  // Generate empathetic response if user is experiencing emotions
-  let empatheticIntro = '';
-  if (conversationContext.lastEmotionalState && conversationContext.lastEmotionalState !== 'neutral') {
-    empatheticIntro = generateEmpatheticResponse() + '\n\n';
-  }
-  
-  // Handle emergency situations immediately
-  if (intent === 'emergency_support' || conversationContext.lastEmotionalState === 'urgent') {
-    return `${empatheticIntro}This sounds like a situation that requires immediate medical attention. Please contact emergency services or go to your nearest emergency department without delay. Your health and safety are the top priority right now.`;
-  }
-  
-  // Handle self-care request
-  if (intent === 'self_care_request') {
-    return `${empatheticIntro}Here are some self-care recommendations that may help:\n\n${generateSelfCareTips(3)}\n\nWould you like more specific advice based on your symptoms?`;
-  }
-  
   // Update last mentioned condition if a symptom is found
   const symptomEntity = entities.find(entity => entity.name === 'symptom');
   if (symptomEntity) {
@@ -632,9 +432,199 @@ const generateResponseForIntent = (intent: IntentType, entities: Entity[], input
     conversationContext.lastMentionedMedication = medicationEntity.value;
   }
   
-  // Handle emotional intents specifically
-  if (intent === 'user_frustration' || intent === 'user_anxiety' || intent === 'user_confusion') {
-    let response = empatheticIntro;
+  switch (intent) {
+    case 'symptom_check':
+      if (symptomEntity && medicalKnowledgeBase[symptomEntity.value]) {
+        const condition = medicalKnowledgeBase[symptomEntity.value];
+        return condition.responses[Math.floor(Math.random() * condition.responses.length)];
+      } else if (conversationContext.lastMentionedCondition && medicalKnowledgeBase[conversationContext.lastMentionedCondition]) {
+        // Use previously mentioned condition if available
+        const condition = medicalKnowledgeBase[conversationContext.lastMentionedCondition];
+        return condition.responses[Math.floor(Math.random() * condition.responses.length)];
+      }
+      break;
+      
+    case 'medication_inquiry':
+    case 'suggest_medication':
+      let condition = '';
+      
+      if (symptomEntity && medicalKnowledgeBase[symptomEntity.value]) {
+        condition = symptomEntity.value;
+      } else if (conversationContext.lastMentionedCondition) {
+        condition = conversationContext.lastMentionedCondition;
+      }
+      
+      if (condition && medicalKnowledgeBase[condition]) {
+        const suggestedMeds = medicalKnowledgeBase[condition].suggestedMedications;
+        if (suggestedMeds.length > 0) {
+          if (suggestedMeds.length === 1) {
+            return `For ${condition}, ${suggestedMeds[0]} is clinically recommended. Would you like information on the appropriate dosage?`;
+          } else {
+            return `For ${condition}, clinical guidelines recommend ${suggestedMeds.slice(0, -1).join(', ')} or ${suggestedMeds[suggestedMeds.length - 1]}. Each has specific indications and contraindications. Would you like more detailed information on any of these medications?`;
+          }
+        }
+      }
+      break;
+      
+    case 'dosage_inquiry':
+      let medication = '';
+      
+      if (medicationEntity) {
+        medication = medicationEntity.value;
+      } else if (conversationContext.lastMentionedMedication) {
+        medication = conversationContext.lastMentionedMedication;
+      }
+      
+      if (medication && medicationDatabase[medication]) {
+        return `The recommended dosage for ${medication} is: ${medicationDatabase[medication].dosage}`;
+      }
+      break;
+      
+    case 'side_effect_inquiry':
+      if (medicationEntity && medicationDatabase[medicationEntity.value]) {
+        const med = medicationDatabase[medicationEntity.value];
+        return `${medicationEntity.value} may cause: ${med.sideEffects.join(', ')}. Contraindications include: ${med.contraindications.join(', ')}. Please consult your healthcare provider before use.`;
+      } else if (conversationContext.lastMentionedMedication && medicationDatabase[conversationContext.lastMentionedMedication]) {
+        const med = medicationDatabase[conversationContext.lastMentionedMedication];
+        return `${conversationContext.lastMentionedMedication} may cause: ${med.sideEffects.join(', ')}. Contraindications include: ${med.contraindications.join(', ')}. Please consult your healthcare provider before use.`;
+      }
+      break;
+      
+    case 'treatment_duration':
+      if (medicationEntity || conversationContext.lastMentionedMedication) {
+        const med = medicationEntity ? medicationEntity.value : conversationContext.lastMentionedMedication;
+        return `Treatment duration with ${med} depends on your specific condition and response to therapy. For acute symptoms, short-term use of 3-5 days is typically sufficient. For chronic conditions, your healthcare provider may recommend a specific regimen tailored to your needs.`;
+      } else if (conversationContext.lastMentionedCondition) {
+        return `Treatment duration for ${conversationContext.lastMentionedCondition} varies based on severity and patient response. Mild cases often resolve within days with appropriate management, while more significant presentations may require prolonged therapy under medical supervision.`;
+      }
+      break;
+      
+    case 'severity_assessment':
+      if (conversationContext.lastMentionedCondition && medicalKnowledgeBase[conversationContext.lastMentionedCondition]) {
+        const condition = medicalKnowledgeBase[conversationContext.lastMentionedCondition];
+        switch (condition.severity) {
+          case 'high':
+            return `${conversationContext.lastMentionedCondition} can represent a serious medical condition requiring prompt clinical evaluation. Please seek immediate medical attention, particularly if experiencing ${condition.keywords.slice(0, 2).join(' or ')}.`;
+          case 'medium':
+            return `${conversationContext.lastMentionedCondition} may indicate a condition requiring medical assessment if symptoms persist beyond 48-72 hours or if accompanied by ${condition.keywords.slice(0, 2).join(' or ')}.`;
+          case 'low':
+            return `${conversationContext.lastMentionedCondition} typically represents a benign condition manageable with conservative measures. However, clinical evaluation is recommended if symptoms worsen or persist beyond 5-7 days.`;
+        }
+      }
+      break;
+      
+    case 'follow_up_needed':
+      if (conversationContext.lastMentionedCondition && medicalKnowledgeBase[conversationContext.lastMentionedCondition]) {
+        const condition = medicalKnowledgeBase[conversationContext.lastMentionedCondition];
+        switch (condition.severity) {
+          case 'high':
+            return `For ${conversationContext.lastMentionedCondition}, immediate medical consultation is recommended, particularly if symptoms are acute in onset or severe in nature.`;
+          case 'medium':
+            return `For ${conversationContext.lastMentionedCondition}, medical evaluation is recommended if symptoms persist beyond 48-72 hours, worsen in intensity, or are accompanied by additional concerning manifestations.`;
+          case 'low':
+            return `For ${conversationContext.lastMentionedCondition}, medical consultation may be beneficial if symptoms do not improve with conservative management after 5-7 days or if there is significant impact on daily functioning.`;
+        }
+      }
+      break;
+      
+    case 'general_inquiry':
+      // Provide general information about a condition
+      if (symptomEntity && medicalKnowledgeBase[symptomEntity.value]) {
+        return `${symptomEntity.value} may be associated with various underlying causes. Prevention strategies include ${generatePreventionTips(symptomEntity.value)}. This information is based on current clinical guidelines.`;
+      } else if (conversationContext.lastMentionedCondition) {
+        return `${conversationContext.lastMentionedCondition} may be associated with various underlying causes. Prevention strategies include ${generatePreventionTips(conversationContext.lastMentionedCondition)}. This information is based on current clinical guidelines.`;
+      }
+      break;
+  }
+  
+  // Fallback response if no specific answer is available
+  return `Based on current medical knowledge, your inquiry requires more specific clinical information for accurate assessment. Consider consulting with a healthcare provider who can perform an appropriate evaluation.`;
+};
+
+// Helper function to generate prevention tips
+const generatePreventionTips = (condition: string): string => {
+  const preventionTips = {
+    headache: 'adequate hydration, stress management techniques, regular sleep patterns, and ergonomic workspace setup',
+    fever: 'maintaining good hygiene practices, avoiding contact with ill individuals, and ensuring proper immunization status',
+    cough: 'avoiding respiratory irritants, proper hand hygiene, maintaining adequate hydration, and appropriate management of underlying respiratory conditions',
+    stomachache: 'proper food safety practices, regular meals, adequate hydration, and stress management techniques',
+    rash: 'avoiding known allergens or irritants, maintaining proper skin hygiene, and using appropriate moisturizers for skin protection',
+    dizziness: 'proper hydration, gradual position changes, and regular monitoring of blood pressure if applicable',
+    fatigue: 'regular physical activity, balanced nutrition, stress management, and maintenance of consistent sleep patterns',
+    'sore throat': 'proper hand hygiene, avoiding sharing personal items, maintaining hydration, and limiting exposure to environmental irritants',
+    'breathing difficulty': 'avoiding known respiratory triggers, maintaining appropriate treatment for underlying conditions, and implementing air quality measures',
+    'chest pain': 'cardiovascular risk factor management, regular physical activity as medically appropriate, and stress reduction techniques'
+  };
+  
+  return preventionTips[condition as keyof typeof preventionTips] || 
+         'maintaining a balanced lifestyle with adequate nutrition, regular physical activity, proper hydration, and appropriate stress management';
+};
+
+// Function to generate a follow-up question based on context
+const generateFollowUp = (intent: IntentType, entities: Entity[]): string | null => {
+  // If we identified a condition and have follow-up questions for it
+  if (conversationContext.lastMentionedCondition && 
+      medicalKnowledgeBase[conversationContext.lastMentionedCondition]?.followUpQuestions?.length) {
     
-    // If we have a previously mentioned condition, add relevant medical info
-    if (conversationContext.lastMentionedCondition && medicalKnowledgeBase[conversationContext
+    const followUps = medicalKnowledgeBase[conversationContext.lastMentionedCondition].followUpQuestions;
+    if (followUps && followUps.length > 0) {
+      return followUps[Math.floor(Math.random() * followUps.length)];
+    }
+  }
+  
+  // Based on intent, we might ask different follow-ups
+  switch (intent) {
+    case 'symptom_check':
+      return 'When did you first notice these symptoms?';
+    case 'medication_inquiry':
+      return 'Do you have any known allergies or current medications?';
+    case 'suggest_medication':
+      return 'Would you like information on potential side effects of the suggested medication?';
+    case 'dosage_inquiry':
+      return 'What is your age and weight? This helps determine the optimal dosage.';
+    case 'side_effect_inquiry':
+      return 'Have you experienced adverse reactions to similar medications in the past?';
+  }
+  
+  return null;
+};
+
+export const generateAIResponse = async (prompt: string): Promise<AIResponse> => {
+  try {
+    // Update conversation context
+    conversationContext.questionCount++;
+    conversationContext.lastResponseTime = Date.now();
+    
+    // Identify entities in the input
+    const entities = identifyEntities(prompt);
+    
+    // Identify intent based on the input and entities
+    const intent = identifyIntent(prompt, entities);
+    
+    // Update the context with the current intent and entities
+    conversationContext.lastIntent = intent;
+    conversationContext.lastEntities = entities;
+    
+    // Simulate processing time (longer for first question, shorter for follow-ups)
+    const processingTime = conversationContext.questionCount === 1 ? 1500 : 800;
+    await new Promise(resolve => setTimeout(resolve, processingTime));
+    
+    // Generate response based on intent and entities
+    const response = generateResponseForIntent(intent, entities, prompt);
+    
+    // Generate a follow-up question if appropriate
+    const followUpQuestion = generateFollowUp(intent, entities);
+    const followUpText = followUpQuestion ? `\n\nTo better assess your condition: ${followUpQuestion}` : '';
+    
+    return {
+      message: response + followUpText,
+      isError: false
+    };
+  } catch (error) {
+    console.error('AI service error:', error);
+    return {
+      message: 'We apologize, but there was an error processing your inquiry. Please try again.',
+      isError: true
+    };
+  }
+};
