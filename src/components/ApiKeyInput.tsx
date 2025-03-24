@@ -23,7 +23,7 @@ const ApiKeyInput: React.FC = () => {
           <p className="text-sm">
             This medical assistant provides professional clinical information based on current medical knowledge and best practices.
             The system recognizes emotional cues and offers empathetic support alongside medical guidance.
-            It can detect when you're feeling frustrated, anxious, confused, or down, and adapts its responses accordingly to provide both emotional support and accurate medical information.
+            It can detect when you're feeling frustrated, anxious, confused, or down, and adapts its responses accordingly to provide both emotional support, self-care tips, and accurate medical information.
           </p>
         </TooltipContent>
       </Tooltip>

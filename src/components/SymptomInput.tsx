@@ -23,7 +23,10 @@ const SymptomInput: React.FC<{
     "What can I do to feel better?",
     "I'm tired of this pain, it's frustrating",
     "I feel so down today with these symptoms",
-    "I'm worried, is my fever serious?"
+    "I'm worried, is my fever serious?",
+    "How can I manage stress with these symptoms?",
+    "What are some self-care tips for feeling this way?",
+    "I hate feeling like this, any advice?"
   ];
   
   // Randomly select one example prompt
